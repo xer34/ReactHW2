@@ -4,3 +4,9 @@
 body {
     background: grey;
 }
+.imgThumb {
+    padding: 10px;
+}
+#jumbo{
+    height: 10px;
+}
