@@ -4,15 +4,16 @@ import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
 import "./style.css";
+import API from "../utils/API";
 
 const books = require("google-books-search");
 
 class Search extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       books: []
-    }
+    };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
@@ -20,9 +21,9 @@ class Search extends Component {
     const { name, value } = event.target;
     this.setState({
       [name]: value
-    })
-  }
-  
+    });
+  };
+
   handleFormSubmit = event => {
     let currentComponent = this;
     event.preventDefault();
@@ -30,13 +31,26 @@ class Search extends Component {
       if (!error) {
         currentComponent.setState({
           books: currentComponent.state.books.concat(results)
-        })
+        });
         console.log(currentComponent.state.books);
       } else {
         console.log(error);
       }
+    });
+  };
+
+  saveBook = book => {
+    console.log(book);
+    API.saveBook({
+      title: book.title,
+      author: book.authors,
+      description: book.description,
+      image: book.image,
+      synopsis: book.synopsis,
+      link: book.link
     })
-  }
+    .then(alert("Book Saved"))
+  };
 
   render() {
     return (
@@ -65,27 +79,36 @@ class Search extends Component {
             </Col>
           </Row>
           <Container fluid>
-          <Col size="12">
-            {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book.id}>
-                      <img className="imgThumb" src={book.thumbnail} alt={book.alt} />
-                      
+            <Col size="12">
+              {this.state.books.length ? (
+                <List>
+                  {this.state.books.map(book => (
+                    <ListItem key={book.id}>
+                      <img
+                        className="imgThumb"
+                        src={book.thumbnail}
+                        alt={book.alt}
+                      />
                       <strong>
                         {book.title} by {book.authors}
-                        <br></br><br></br>
+                        <br />
+                        <br />
                         <button href={book.link}>Link</button>
-                      </strong><br></br><br></br>
+                        <FormBtn onClick={() => this.saveBook(book)}>
+                          Save Book
+                        </FormBtn>
+                      </strong>
+                      <br />
+                      <br />
                       <p>{book.description}</p>
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
-          </Col>
-        </Container>
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <h3>No Results to Display</h3>
+              )}
+            </Col>
+          </Container>
         </Container>
       </div>
     );
