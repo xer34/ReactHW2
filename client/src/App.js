@@ -11,9 +11,10 @@ function App() {
       <div>
         <Nav />
         <Switch>
-          <Route path="/" component={Search} />
-          <Route path="/books" component={Books} />
-          <Route component={NoMatch} />
+
+          <Route exact path="/books" component={Books} />
+          <Route path="/*" component={Search} />
+          {/* <Route component={NoMatch} /> */}
         </Switch>
       </div>
     </Router>
